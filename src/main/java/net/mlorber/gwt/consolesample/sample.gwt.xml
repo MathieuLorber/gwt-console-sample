@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module>
+<module rename-to='gwtconsolesample'>
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name="com.google.gwt.resources.Resources" />
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<inherits name='net.mlorber.gwt.console.Console' />
+
+	<extend-property name="locale" values="fr_FR" />
+	<set-property name="locale" value="fr_FR" />
+	<set-property-fallback name="locale" value="fr_FR" />
+
+	<entry-point class='net.mlorber.gwt.consolesample.client.ApplicationEntryPoint' />
+
+	<source path='client' />
+	<source path='shared' />
+</module>
