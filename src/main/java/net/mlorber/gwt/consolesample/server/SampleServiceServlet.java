@@ -15,7 +15,7 @@ public class SampleServiceServlet extends RemoteServiceServlet implements Sample
    }
 
    @Override
-   public String boum() throws SampleRuntimeException {
+   public String boum() {
       throw new SampleRuntimeException("SampleRuntimeException message");
    }
 
