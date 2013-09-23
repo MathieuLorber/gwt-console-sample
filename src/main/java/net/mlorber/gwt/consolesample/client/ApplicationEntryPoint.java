@@ -19,15 +19,19 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class ApplicationEntryPoint implements EntryPoint {
 
+	private final static Logger logger = Logger.getLogger("");
+
 	@Override
 	public void onModuleLoad() {
 		// TODO JQueryNotificationFactory message si missing jquery
-		Console.get().init(Logger.getLogger(""), Level.WARNING, new SimpleNotificationFactory()).registerShorcut()
-				.setUnknownErrorMessage("Erreur inconnue : ");
+		Console.get().init(Logger.getLogger(""), Level.WARNING, new SimpleNotificationFactory());
+		Console.get().registerShorcut();
+		Console.get().setUnknownErrorMessage("Erreur inconnue : ");
 
 		setUncaughtExceptionHandler();
 
@@ -36,6 +40,93 @@ public class ApplicationEntryPoint implements EntryPoint {
 
 		final SampleRemoteServiceAsync service = GWT.create(SampleRemoteService.class);
 
+		rootContainer.add(new HTML("<h1>API</h1>"));
+		rootContainer.add(new Button("Juste notif") {
+			{
+				addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						Console.get().showNotification("hello i'm here", NotificationType.INFO, false);
+					}
+				});
+			}
+		});
+		rootContainer.add(new Button("Juste un log") {
+			{
+				addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						logger.info("Juste un log !");
+					}
+				});
+			}
+		});
+		rootContainer.add(new Button("Add button") {
+			{
+				addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						Console.get().addHelperWidget(new Button("Juste un log") {
+							{
+								addClickHandler(new ClickHandler() {
+
+									@Override
+									public void onClick(ClickEvent event) {
+										logger.info("Juste un log !");
+									}
+								});
+							}
+						});
+					}
+				});
+			}
+		});
+		rootContainer.add(new HTML("<h1>Exceptions</h1>"));
+		rootContainer.add(new Button("SampleException") {
+			{
+				addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						try {
+							throw new SampleException("coucou");
+						} catch (SampleException e) {
+							throw new RuntimeException(e);
+						}
+					}
+				});
+			}
+		});
+		rootContainer.add(new Button("SampleRuntimeException") {
+			{
+				addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						try {
+							throw new SampleRuntimeException("coucou");
+						} catch (SampleRuntimeException e) {
+							throw new RuntimeException(e);
+						}
+					}
+				});
+			}
+		});
+		rootContainer.add(new Button("Runtime") {
+			{
+				addClickHandler(new ClickHandler() {
+
+					@Override
+					public void onClick(ClickEvent event) {
+						throw new RuntimeException("What a runtime exception message");
+					}
+				});
+			}
+		});
+		rootContainer.add(new HTML("<h1>Remote</h1>"));
 		rootContainer.add(new Button("Remote SampleException") {
 			{
 				addClickHandler(new ClickHandler() {
@@ -99,58 +190,7 @@ public class ApplicationEntryPoint implements EntryPoint {
 				});
 			}
 		});
-		rootContainer.add(new Button("SampleException") {
-			{
-				addClickHandler(new ClickHandler() {
 
-					@Override
-					public void onClick(ClickEvent event) {
-						try {
-							throw new SampleException("coucou");
-						} catch (SampleException e) {
-							throw new RuntimeException(e);
-						}
-					}
-				});
-			}
-		});
-		rootContainer.add(new Button("SampleRuntimeException") {
-			{
-				addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						try {
-							throw new SampleRuntimeException("coucou");
-						} catch (SampleRuntimeException e) {
-							throw new RuntimeException(e);
-						}
-					}
-				});
-			}
-		});
-		rootContainer.add(new Button("Runtime") {
-			{
-				addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						throw new RuntimeException("What a runtime exception message");
-					}
-				});
-			}
-		});
-		rootContainer.add(new Button("Juste notif") {
-			{
-				addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						Console.get().showNotification("hello i'm here", NotificationType.INFO);
-					}
-				});
-			}
-		});
 	}
 
 	private void setUncaughtExceptionHandler() {
@@ -171,7 +211,8 @@ public class ApplicationEntryPoint implements EntryPoint {
 				if (!exceptionParser.parse(throwable)) {
 					Console.get().showNotification(throwable.getMessage(), NotificationType.WARNING);
 					// so dev logger is still used
-					Console.get().logUncaughtException(throwable);
+					// Console.get().logUncaughtException(throwable);
+					logger.log(Level.WARNING, "Uncaught exception", throwable);
 				}
 			}
 		});
