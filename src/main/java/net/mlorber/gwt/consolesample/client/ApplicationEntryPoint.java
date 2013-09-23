@@ -25,8 +25,7 @@ public class ApplicationEntryPoint implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		// JQueryNotificationFactory
-		// message si missing jquery
+		// TODO JQueryNotificationFactory message si missing jquery
 		Console.get().init(Logger.getLogger(""), Level.WARNING, new SimpleNotificationFactory()).registerShorcut()
 				.setUnknownErrorMessage("Erreur inconnue : ");
 
